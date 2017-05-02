@@ -10,12 +10,12 @@ router.post('/signup', (req, res) => {
   let { username, email, password } = req.body;
 
   mongoConnected.then(db => {
-    db.collection('users').findOne({ username }).then((user) => {
+    db.collection('users').findOne({ username: { $exists: username }, email: { $exists: email } }).then((user) => {
       if (user) {
         console.log(user);
         return res.status(400).json({
           status: 400,
-          message: 'This username is already used'
+          message: 'This username or email is already used'
         });
       }
 
