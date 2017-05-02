@@ -1,0 +1,4 @@
+{
+  "DB": "mongodb://ostap:ostap@ds029381.mlab.com:29381/camp-chat",
+  "SECRET": "secret"
+}
