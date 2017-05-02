@@ -10,7 +10,7 @@ router.post('/signup', (req, res) => {
   let { username, email, password } = req.body;
 
   mongoConnected.then(db => {
-    db.collection('users').findOne({ username: { $exists: username }, email: { $exists: email } }).then((user) => {
+    db.collection('users').findOne({ $or: [{ username }, { email }] }).then((user) => {
       if (user) {
         console.log(user);
         return res.status(400).json({
@@ -76,5 +76,13 @@ router.post('/login', (req, res) => {
     })
   })
 });
+
+router.get('/users', (req, res) => {
+  mongoConnected.then(db => {
+    db.collection('users').find({}, { password: 0 }).toArray((err, users) => { 
+      res.status(200).send(users);
+    })
+  })
+})
 
 module.exports = router
