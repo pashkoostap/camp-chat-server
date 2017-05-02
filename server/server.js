@@ -13,9 +13,9 @@ const io = socketIO(server);
 app.use(bodyParser.json());
 app.use(router);
 
-io.on('connection', (socket) => {
-  console.log(socket);
-})
+// io.on('connection', (socket) => {
+//   console.log(socket);
+// })
 
 server.listen(port, () => {
   console.log(`Started at port ${port}`);
