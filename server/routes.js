@@ -3,7 +3,7 @@ const router = express.Router()
 const jwt = require('jsonwebtoken')
 
 const mongoConnected = require('./db.js')
-const CONFIG = require('./config.json')
+const CONFIG = require('./config.json');
 const { validateString, validateEmail } = require('./utils/validation');
 
 router.post('/signup', (req, res) => {
@@ -53,5 +53,28 @@ router.post('/signup', (req, res) => {
     })
   });
 })
+
+router.post('/login', (req, res) => {
+  let { username, password } = req.body;
+  mongoConnected.then(db => {
+    db.collection('users').findOne({ username, password }, { password: 0 }).then((user) => {
+      if (!user) {
+        return res.status(400).json({
+          status: 400,
+          message: 'User not found'
+        });
+      } else {
+        const token = jwt.sign(user, CONFIG.SECRET, { noTimestamp: true })
+        res.status(200).json({
+          status: 200,
+          message: '',
+          user,
+          token,
+          tokenType: 'Bearer'
+        });
+      }
+    })
+  })
+});
 
 module.exports = router

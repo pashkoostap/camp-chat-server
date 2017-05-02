@@ -17,9 +17,9 @@ app.use(router);
 
 app.use(express.static(publicPath));
 
-// io.on('connection', (socket) => {
-//   console.log(socket);
-// })
+io.on('connection', (socket) => {
+  console.log(socket);
+})
 
 server.listen(port, () => {
   console.log(`Started at port ${port}`);

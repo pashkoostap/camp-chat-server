@@ -1,7 +1,7 @@
-const validateString = (username) => {
+const validateString = (str) => {
   // checking for white spaces in username
-  let replacedUsername = username.replace(/\s/g, '').length;
-  if (typeof username === 'string' && username.length > 5 && replacedUsername) {
+  let replacedStr = str.replace(/\s/g, '').length;
+  if (typeof str === 'string' && str.length > 5 && replacedStr) {
     return true;
   } else {
     return false;
