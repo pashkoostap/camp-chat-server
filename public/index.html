@@ -12,19 +12,29 @@
 <body>
   <h3>Test connection page</h3>
   <form class="login-form">
-    <input class="username" type="text" name="username" placeholder="username">
-    <input class="password" type="text" name="password" placeholder="password">
+    <h2>Login form</h2>
+    <input class="username" type="text" name="username" placeholder="username" value="pashkoOstap">
+    <input class="password" type="text" name="password" placeholder="password" value="pashkoOstap">
     <button class="login" type="submit">Login</button>
   </form>
 
+  <form class="send-message">
+    <h2>Send message</h2>
+    <input class="message" type="text" name="message" placeholder="message">
+    <button class="send" type="submit">Send message</button>
+  </form>
+
   <script>
-    const socket = io.connect('localhost:5000');
+    const socket = io.connect('http://192.168.1.13:5000');
     const loginForm = document.querySelector('.login-form');
-    const sendButton = loginForm.querySelector('.login');
+    const loginButton = loginForm.querySelector('.login');
     const username = loginForm.querySelector('.username');
     const password = loginForm.querySelector('.password');
+    const sendMessageForm = document.querySelector('.send-message');
+    const sendMessageButton = sendMessageForm.querySelector('.send');
+    const sendMessageInput = sendMessageForm.querySelector('.message');
 
-    sendButton.addEventListener('click', (e) => {
+    loginButton.addEventListener('click', (e) => {
       e.preventDefault();
       let myHeaders = new Headers();
       myHeaders.set('Content-Type', 'application/json');
@@ -39,11 +49,23 @@
         .then((res) => res.json())
         .then((userInfo) => {
           console.log(userInfo);
+          socket.emit('authenticate', { token: userInfo.token })
         })
+    })
+
+    sendMessageButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      socket.emit('message', sendMessageInput.value);
     })
 
     socket.on('connect', () => {
       console.info('connected');
+    })
+    socket.on('join', msg => {
+      console.log(msg);
+    })
+    socket.on('message', msg => {
+      console.log(msg);
     })
   </script>
 </body>
