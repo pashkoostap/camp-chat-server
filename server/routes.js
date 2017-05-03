@@ -12,7 +12,6 @@ router.post('/signup', (req, res) => {
   mongoConnected.then(db => {
     db.collection('users').findOne({ $or: [{ username }, { email }] }).then((user) => {
       if (user) {
-        console.log(user);
         return res.status(400).json({
           status: 400,
           message: 'This username or email is already used'
@@ -20,19 +19,16 @@ router.post('/signup', (req, res) => {
       }
 
       if (!username || !validateString(username)) {
-        console.log(username);
         res.status(400).json({
           status: 400,
           message: 'Your name must contains at least 6 symbols'
         });
       } else if (!email || !validateEmail(email)) {
-        console.log(email);
         res.status(400).json({
           status: 400,
           message: 'Please provide a valid email'
         });
       } else if (!password || !validateString(password)) {
-        console.log(password);
         res.status(400).json({
           status: 400,
           message: 'Your password must contains at least 6 symbols'
@@ -67,7 +63,7 @@ router.post('/login', (req, res) => {
         const token = jwt.sign(user, CONFIG.SECRET, { noTimestamp: true })
         res.status(200).json({
           status: 200,
-          message: '',
+          message: 'Wellcome',
           user,
           token,
           tokenType: 'Bearer'

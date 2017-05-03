@@ -5,11 +5,47 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="http://eleksfrontendcamp-mockapitron.rhcloud.com/socket.io/socket.io.js"></script>
   <title>ELEKS Front-End-Camp Chat server</title>
 </head>
 
 <body>
-  <h3>Init page</h3>
+  <h3>Test connection page</h3>
+  <form class="login-form">
+    <input class="username" type="text" name="username" placeholder="username">
+    <input class="password" type="text" name="password" placeholder="password">
+    <button class="login" type="submit">Login</button>
+  </form>
+
+  <script>
+    const socket = io.connect('localhost:5000');
+    const loginForm = document.querySelector('.login-form');
+    const sendButton = loginForm.querySelector('.login');
+    const username = loginForm.querySelector('.username');
+    const password = loginForm.querySelector('.password');
+
+    sendButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      let myHeaders = new Headers();
+      myHeaders.set('Content-Type', 'application/json');
+
+      let myInit = {
+        method: 'post',
+        headers: myHeaders,
+        mode: 'cors',
+        body: JSON.stringify({ username: username.value, password: password.value })
+      }
+      fetch('http://192.168.1.13:5000/login', myInit)
+        .then((res) => res.json())
+        .then((userInfo) => {
+          console.log(userInfo);
+        })
+    })
+
+    socket.on('connect', () => {
+      console.info('connected');
+    })
+  </script>
 </body>
 
 </html>
