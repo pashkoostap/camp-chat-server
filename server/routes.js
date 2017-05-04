@@ -120,16 +120,27 @@ router.post('/chat', (req, res) => {
   }
 
   mongoConnected.then(db => {
+    db.collection('chats').findOne({ chatname }).then(chat => {
+      if (chat) {
+        return res.status(400).json({
+          status: 400,
+          message: 'This chatname is already used'
+        });
+      }
+    })
     users.forEach((user, i, arr) => {
       let { username } = user;
-      db.collection('users').findOne({ username }).then(user => {
+      db.collection('users').findOne({ username }, { password: 0 }).then(user => {
         chatObj.users.push(user);
         if (i == arr.length - 1) {
-          db.collection('chats').insert(chatObj);
-          res.status(200).json({
-            status: 200,
-            message: 'New chat was successfully created'
-          });
+          db.collection('chats').insert(chatObj).then(doc => {
+            let chat = doc.ops[0];
+            res.status(200).json({
+              status: 200,
+              message: 'New chat was successfully created',
+              chat
+            });
+          })
         }
       })
     })
