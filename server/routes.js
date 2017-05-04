@@ -34,15 +34,17 @@ router.post('/signup', (req, res) => {
           message: 'Your password must contains at least 6 symbols'
         });
       } else {
-        db.collection('users').insert(req.body, (err, user) => {
+        const token = jwt.sign(req.body, CONFIG.SECRET, { noTimestamp: true })
+        db.collection('users').insert({ username, email, password, token, tokenType: 'Bearer' }, (err, user) => {
           if (err) {
             return res.status(404).send(err)
           }
-          let { _id, username, email } = user.ops[0];
+          let { _id, username, email, token, tokenType } = user.ops[0];
+
           res.status(200).json({
             status: 200,
             message: 'User was succesfully created',
-            user: { _id, username, email }
+            user: { _id, username, email, token }
           });
         })
       }
@@ -60,13 +62,10 @@ router.post('/login', (req, res) => {
           message: 'User not found'
         });
       } else {
-        const token = jwt.sign(user, CONFIG.SECRET, { noTimestamp: true })
         res.status(200).json({
           status: 200,
           message: 'Wellcome',
-          user,
-          token,
-          tokenType: 'Bearer'
+          user
         });
       }
     })
@@ -75,7 +74,7 @@ router.post('/login', (req, res) => {
 
 router.get('/users', (req, res) => {
   mongoConnected.then(db => {
-    db.collection('users').find({}, { password: 0 }).toArray((err, users) => { 
+    db.collection('users').find({}, { password: 0 }).toArray((err, users) => {
       res.status(200).send(users);
     })
   })
