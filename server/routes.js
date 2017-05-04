@@ -148,7 +148,7 @@ router.post('/newchat', (req, res) => {
   })
 })
 
-router.get('/getchats/:userID', (req, res) => {
+router.post('/getchats/:userID', (req, res) => {
   let { userID } = req.params;
   if (!ObjectID.isValid(userID)) {
     return res.status(404).json({
