@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { ObjectID } = require('mongodb');
 const jwt = require('jsonwebtoken');
 
 const mongoConnected = require('./db.js');
@@ -142,6 +143,31 @@ router.post('/chat', (req, res) => {
             });
           })
         }
+      })
+    })
+  })
+})
+
+router.get('/chat/:userID', (req, res) => {
+  let { userID } = req.params;
+  if (!ObjectID.isValid(userID)) {
+    return res.status(404).json({
+      status: 400,
+      message: 'Please provide valid userID'
+    })
+  }
+  mongoConnected.then(db => {
+    db.collection('chats').find({ users: { $elemMatch: { _id: ObjectID(userID) } } }).toArray((err, chats) => {
+      if (!chats || !validateArray(chats)) {
+        return res.status(400).json({
+          status: 400,
+          message: 'Chats for this user were not found'
+        })
+      }
+      res.status(200).json({
+        status: 200,
+        message: 'Chats found',
+        chats
       })
     })
   })
