@@ -8,7 +8,6 @@ const { validateString, validateEmail } = require('./utils/validation');
 
 router.post('/signup', (req, res) => {
   let { username, email, password } = req.body;
-
   mongoConnected.then(db => {
     db.collection('users').findOne({ $or: [{ username }, { email }] }).then((user) => {
       if (user) {
@@ -75,11 +74,8 @@ router.post('/login', (req, res) => {
 
 router.delete('/user', (req, res) => {
   let { username, password } = req.body;
-  console.log(req.body)
   mongoConnected.then(db => {
     db.collection('users').findOneAndDelete({ username, password }).then((user) => {
-
-      console.log(user)
       if (!user) {
         return res.status(400).json({
           status: 400,
@@ -88,7 +84,7 @@ router.delete('/user', (req, res) => {
       } else {
         res.status(200).json({
           status: 200,
-          message: 'Your account was successfully removed'
+          message: 'Your account was successfully deleted'
         });
       }
     })
@@ -99,6 +95,43 @@ router.get('/users', (req, res) => {
   mongoConnected.then(db => {
     db.collection('users').find({}, { password: 0 }).toArray((err, users) => {
       res.status(200).send(users);
+    })
+  })
+})
+
+router.post('/chat', (req, res) => {
+  let { chatname, users } = req.body;
+  let chatObj = {
+    chatname,
+    users: []
+  }
+  if (!chatname || !validateString(chatname)) {
+    return res.status(400).json({
+      status: 400,
+      message: 'Chat name must contains at least 6 symbols'
+    });
+  }
+
+  if (!users.length) {
+    return res.status(400).json({
+      status: 400,
+      message: 'Please provide a valid users names'
+    });
+  }
+
+  mongoConnected.then(db => {
+    users.forEach((user, i, arr) => {
+      let { username } = user;
+      db.collection('users').findOne({ username }).then(user => {
+        chatObj.users.push(user);
+        if (i == arr.length - 1) {
+          db.collection('chats').insert(chatObj);
+          res.status(200).json({
+            status: 200,
+            message: 'New chat was successfully created'
+          });
+        }
+      })
     })
   })
 })

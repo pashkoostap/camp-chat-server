@@ -34,7 +34,7 @@ io.sockets
     socket.on('message', msg => {
       const msgObj = {
         msg: msg.text,
-        chat: msg.chat,
+        chatname: msg.chatname,
         user: socket.decoded_token,
         time: Date.now()
       }
