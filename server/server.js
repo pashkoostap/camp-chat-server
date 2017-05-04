@@ -29,7 +29,7 @@ io.sockets
     io.emit('join', {
       user: socket.decoded_token,
       time: Date.now()
-    })
+    });
     socket.on('message', msg => {
       const msgObj = {
         msg,
@@ -38,7 +38,7 @@ io.sockets
       }
 
       io.emit('message', msgObj)
-    })
+    });
   });
 
 server.listen(port, () => {

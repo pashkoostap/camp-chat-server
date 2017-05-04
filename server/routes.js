@@ -41,7 +41,7 @@ router.post('/signup', (req, res) => {
           let { _id, username, email } = user.ops[0];
           res.status(200).json({
             status: 200,
-            message: 'User was succesfully created',
+            message: 'Your account was successfully created',
             user: { _id, username, email }
           });
         })
@@ -73,12 +73,35 @@ router.post('/login', (req, res) => {
   })
 });
 
+router.delete('/user', (req, res) => {
+  let { username, password } = req.body;
+  console.log(req.body)
+  mongoConnected.then(db => {
+    db.collection('users').findOneAndDelete({ username, password }).then((user) => {
+
+      console.log(user)
+      if (!user) {
+        return res.status(400).json({
+          status: 400,
+          message: 'Please provide a valid username and password'
+        });
+      } else {
+        res.status(200).json({
+          status: 200,
+          message: 'Your account was successfully removed'
+        });
+      }
+    })
+  })
+})
+
 router.get('/users', (req, res) => {
   mongoConnected.then(db => {
-    db.collection('users').find({}, { password: 0 }).toArray((err, users) => { 
+    db.collection('users').find({}, { password: 0 }).toArray((err, users) => {
       res.status(200).send(users);
     })
   })
 })
+
 
 module.exports = router
