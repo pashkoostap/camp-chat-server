@@ -7,11 +7,12 @@ const socketioJwt = require('socketio-jwt')
 
 const router = require('./routes');
 const publicPath = path.join(__dirname, '../public');
+const mongoConnected = require('./db.js');
+const CONFIG = require('./config.json');
 
 const app = express();
-const port = process.env.PORT || 5000;
 const ip = process.env.IP || '192.168.1.13';
-const CONFIG = require('./config.json');
+const port = process.env.PORT || 5000;
 const server = http.createServer(app, ip);
 const io = socketIO(server);
 
@@ -26,19 +27,30 @@ io.sockets
     callback: false
   }))
   .on('authenticated', socket => {
-    io.emit('join', {
+     io.emit('join', {
       user: socket.decoded_token,
       time: Date.now()
     });
     socket.on('message', msg => {
       const msgObj = {
-        msg,
+        msg: msg.text,
+        chat: msg.chat,
         user: socket.decoded_token,
         time: Date.now()
       }
 
-      io.emit('message', msgObj)
+      mongoConnected.then(db => {
+        db.collection('messages').insert(msgObj, (err, doc) => {
+          let message = doc.ops[0];
+          io.to(message.chat).emit('message', message);
+        })
+      })
     });
+
+    socket.on('join-room', (room) => {
+      socket.join(room)
+      console.log(room);
+    })
   });
 
 server.listen(port, () => {

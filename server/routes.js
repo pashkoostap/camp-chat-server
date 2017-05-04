@@ -1,8 +1,8 @@
-const express = require('express')
-const router = express.Router()
-const jwt = require('jsonwebtoken')
+const express = require('express');
+const router = express.Router();
+const jwt = require('jsonwebtoken');
 
-const mongoConnected = require('./db.js')
+const mongoConnected = require('./db.js');
 const CONFIG = require('./config.json');
 const { validateString, validateEmail } = require('./utils/validation');
 
@@ -102,6 +102,5 @@ router.get('/users', (req, res) => {
     })
   })
 })
-
 
 module.exports = router

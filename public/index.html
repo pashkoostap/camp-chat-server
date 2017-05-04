@@ -21,6 +21,7 @@
   <form class="send-message">
     <h2>Send message</h2>
     <input class="message" type="text" name="message" placeholder="message">
+    <input class="chat" type="text" name="chat" placeholder="chat">
     <button class="send" type="submit">Send message</button>
   </form>
 
@@ -33,6 +34,7 @@
     const sendMessageForm = document.querySelector('.send-message');
     const sendMessageButton = sendMessageForm.querySelector('.send');
     const sendMessageInput = sendMessageForm.querySelector('.message');
+    const sendMessageChat = sendMessageForm.querySelector('.chat');
 
     loginButton.addEventListener('click', (e) => {
       e.preventDefault();
@@ -55,7 +57,8 @@
 
     sendMessageButton.addEventListener('click', (e) => {
       e.preventDefault();
-      socket.emit('message', sendMessageInput.value);
+      socket.emit('message', { chat: sendMessageChat.value, text: sendMessageInput.value });
+      socket.emit('join-room', sendMessageChat.value);
     })
 
     socket.on('connect', () => {
