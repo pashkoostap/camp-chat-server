@@ -100,7 +100,7 @@ router.get('/users', (req, res) => {
   })
 })
 
-router.post('/chat', (req, res) => {
+router.post('/newchat', (req, res) => {
   let { chatname, users } = req.body;
   let chatObj = {
     chatname,
@@ -148,7 +148,7 @@ router.post('/chat', (req, res) => {
   })
 })
 
-router.get('/chat/:userID', (req, res) => {
+router.get('/getchats/:userID', (req, res) => {
   let { userID } = req.params;
   if (!ObjectID.isValid(userID)) {
     return res.status(404).json({
