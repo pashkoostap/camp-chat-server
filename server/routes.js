@@ -147,4 +147,30 @@ router.post('/chat', (req, res) => {
   })
 })
 
+router.get('/messages/:chatname', (req, res) => {
+  let { chatname } = req.params;
+  mongoConnected.then(db => {
+    db.collection('chats').findOne({ chatname }).then(chat => {
+      if (!chat) {
+        return res.status(400).json({
+          status: 400,
+          message: 'We can`t find this chat'
+        })
+      }
+      db.collection('messages').find({ chatname }).toArray((err, messages) => {
+        if (err) {
+          return res.status(400).send(err);
+        } else if (messages.length == 0) {
+          return res.status(400).json({
+            status: 400,
+            message: 'Messages for this chat were not found'
+          });
+        }
+        res.status(200).send(messages);
+      })
+    })
+
+  })
+})
+
 module.exports = router

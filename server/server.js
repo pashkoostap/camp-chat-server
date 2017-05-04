@@ -42,7 +42,7 @@ io.sockets
       mongoConnected.then(db => {
         db.collection('messages').insert(msgObj, (err, doc) => {
           let message = doc.ops[0];
-          io.to(message.chat).emit('message', message);
+          io.to(message.chatname).emit('message', message);
         })
       })
     });

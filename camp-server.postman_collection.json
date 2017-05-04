@@ -21,7 +21,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"username\": \"pashkoOstap\",\n\t\"email\": \"example@gmail.com\",\n\t\"password\": \"pashkoOstap\"\n}"
+					"raw": "{\n\t\"username\": \"pashkoOstap1\",\n\t\"email\": \"pashkoOstap1@gmail.com\",\n\t\"password\": \"pashkoOstap1\"\n}"
 				},
 				"description": ""
 			},
@@ -51,6 +51,77 @@
 			"name": "GET /users",
 			"request": {
 				"url": "{{url}}/users",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE /user",
+			"request": {
+				"url": "{{url}}/user",
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/javascript",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\": \"123456\",\n\t\"password\": \"123456\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "POST /chat",
+			"request": {
+				"url": "{{url}}/chat",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/javascript",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"chat\": \"room\",\n\t\"users\": [\n\t\t{\"username\": \"pashkoOstap1\"},\n\t\t{\"username\": \"pashkoOstap2\"}\n\t]\n\t\t\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "POST /chat",
+			"request": {
+				"url": "{{url}}/chat",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"chat\":\"room\",\"users\":[{\"username\":\"pashkoOstap1\"},{\"username\":\"pashkoOstap2\"}]}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "GET /messages/:chatname",
+			"request": {
+				"url": "{{url}}/messages/cool-chat",
 				"method": "GET",
 				"header": [],
 				"body": {},
