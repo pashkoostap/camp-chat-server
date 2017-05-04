@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 
 const mongoConnected = require('./db.js');
 const CONFIG = require('./config.json');
-const { validateString, validateEmail } = require('./utils/validation');
+const { validateString, validateEmail, validateArray } = require('./utils/validation');
 
 router.post('/signup', (req, res) => {
   let { username, email, password } = req.body;
@@ -112,10 +112,10 @@ router.post('/chat', (req, res) => {
     });
   }
 
-  if (!users.length) {
+  if (!users || !validateArray(users)) {
     return res.status(400).json({
       status: 400,
-      message: 'Please provide a valid users names'
+      message: 'Users must be an array and must contains at least 2 users'
     });
   }
 

@@ -17,7 +17,17 @@ const validateEmail = (email) => {
   }
 }
 
+const validateArray = (arr) => {
+  // checking for white spaces in username
+  if (typeof arr === 'object' && arr.length > 0) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 module.exports = {
   validateString,
-  validateEmail
+  validateEmail,
+  validateArray
 }
