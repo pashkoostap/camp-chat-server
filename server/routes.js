@@ -2,10 +2,17 @@ const express = require('express');
 const router = express.Router();
 const { ObjectID } = require('mongodb');
 const jwt = require('jsonwebtoken');
+const cloudinary = require('cloudinary');
 
 const mongoConnected = require('./db.js');
 const CONFIG = require('./config.json');
 const { validateString, validateEmail, validateArray } = require('./utils/validation');
+
+cloudinary.config({
+  cloud_name: 'pashkoostap',
+  api_key: '244148233214624',
+  api_secret: '5SpNwBNZs92KO6aCedsBqVHKJ74'
+});
 
 router.post('/signup', (req, res) => {
   let { username, email, password } = req.body;
@@ -215,6 +222,16 @@ router.get('/messages/:chatname', (req, res) => {
     })
 
   })
+})
+
+router.post('/image', (req, res) => {
+  let imageURL = req.body.image;
+  console.log(imageURL)
+
+  cloudinary.uploader.upload(imageURL, function (result) {
+    console.log(result)
+    res.send(result)
+  });
 })
 
 module.exports = router
