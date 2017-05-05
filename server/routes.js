@@ -9,9 +9,9 @@ const CONFIG = require('./config.json');
 const { validateString, validateEmail, validateArray } = require('./utils/validation');
 
 cloudinary.config({
-  cloud_name: 'pashkoostap',
-  api_key: '244148233214624',
-  api_secret: '5SpNwBNZs92KO6aCedsBqVHKJ74'
+  cloud_name: 'dyldtu4gm',
+  api_key: '599713991634749',
+  api_secret: 'peiRVSRPeidkQe4xsfM1Dhfsaz8'
 });
 
 router.post('/signup', (req, res) => {
@@ -225,11 +225,15 @@ router.get('/messages/:chatname', (req, res) => {
 })
 
 router.post('/image', (req, res) => {
-  let imageURL = req.body.image;
-  console.log(imageURL)
-
-  cloudinary.uploader.upload(imageURL, function (result) {
-    console.log(result)
+  let { image } = req.body;
+  console.log(image)
+  if (!image || !validateString(image)) {
+    return res.status(400).json({
+      status: 400,
+      message: 'Please provide a valid image url or'
+    })
+  }
+  cloudinary.uploader.upload(image, function (result) {
     res.send(result)
   });
 })
