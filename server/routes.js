@@ -164,11 +164,29 @@ router.get('/getchats/:userID', (req, res) => {
           message: 'Chats for this user were not found'
         })
       }
-      res.status(200).json({
-        status: 200,
-        message: 'Chats found',
-        chats
-      })
+      res.status(200).send(chats);
+    })
+  })
+})
+
+
+router.get('/getmessages/:chatID', (req, res) => {
+  let { chatID } = req.params;
+  if (!ObjectID.isValid(chatID)) {
+    return res.status(404).json({
+      status: 400,
+      message: 'Please provide valid chatID'
+    })
+  }
+  mongoConnected.then(db => {
+    db.collection('messages').find({ chatID }).toArray((err, messages) => {
+      if (err) {
+        return res.status(400).json({
+          status: 400,
+          message: 'Error'
+        })
+      }
+      res.status(200).send(messages);
     })
   })
 })

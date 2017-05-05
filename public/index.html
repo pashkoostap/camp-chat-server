@@ -57,7 +57,10 @@
 
     sendMessageButton.addEventListener('click', (e) => {
       e.preventDefault();
-      socket.emit('message', { chatname: sendMessageChat.value, text: sendMessageInput.value });
+      socket.emit('message', { 
+        chatname: sendMessageChat.value, 
+        chatID: '590b782236b8cc15e49b79d4',
+        text: sendMessageInput.value });
       socket.emit('join-room', sendMessageChat.value);
     })
 
