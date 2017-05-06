@@ -240,12 +240,17 @@ router.post('/messages', (req, res) => {
     })
   }
   mongoConnected.then(db => {
+    let promisesArr = [];
     chats.forEach((chat, i) => {
       db.collection('messages').find({ chatID: chat._id }).toArray((err, messages) => {
-        messagesArr.push(...messages);
-        if (i === chats.length - 1) {
-          res.status(200).send(messagesArr);
-        }
+        let promise = Promise.resolve(messagesArr.push(...messages));
+        promisesArr.push(promise);
+        Promise.all(promisesArr).then(values => {
+          if (i === chats.length - 1) {
+            res.status(200).send(messagesArr);
+            console.log(messagesArr.length);
+          }
+        })
       })
     })
   })
