@@ -47,9 +47,8 @@ router.post('/signup', (req, res) => {
           }
           let { _id, username, email, photo } = user.ops[0];
           // UPDATING COMMON CHAT WITH NEW REGISTERED USER
-          let commonChatID = '590d97f77a6eae00114ad274';
-          db.collection('chats').findOneAndUpdate({ _id: ObjectID(commonChatID) },
-            { $push: { users: { _id, username, email, photo } } }).then(chat => console.log('Users in common chat were updated'))
+          let commonChatID = '590d98137a6eae00114ad275';
+          db.collection('chats').findOneAndUpdate({ _id: ObjectID(commonChatID) }, { $push: { users: { _id, username, email, photo } } }).then(chat => console.log('Users in common chat were updated'))
 
           res.status(200).json({
             status: 200,
