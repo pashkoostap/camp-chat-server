@@ -45,11 +45,16 @@ router.post('/signup', (req, res) => {
           if (err) {
             return res.status(404).send(err)
           }
-          let { _id, username, email } = user.ops[0];
+          let { _id, username, email, photo } = user.ops[0];
+          // UPDATING COMMON CHAT WITH NEW REGISTERED USER
+          let commonChatID = '590d97f77a6eae00114ad274';
+          db.collection('chats').findOneAndUpdate({ _id: ObjectID(commonChatID) },
+            { $push: { users: { _id, username, email, photo } } }).then(chat => console.log('Users in common chat were updated'))
+
           res.status(200).json({
             status: 200,
             message: 'Your account was successfully created',
-            user: { _id, username, email }
+            user: { _id, username, email, photo }
           });
         })
       }
