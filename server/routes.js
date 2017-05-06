@@ -228,6 +228,28 @@ router.get('/getmessages/:chatID', (req, res) => {
   })
 })
 
+// POST MESSAGES/:CHATSARRAY
+router.post('/messages', (req, res) => {
+  let { chats } = req.body;
+  let messagesArr = [];
+  if (!chats || !validateArray(chats)) {
+    return res.status(400).json({
+      status: 400,
+      message: 'Please provide an array of chats ids to get message'
+    })
+  }
+  mongoConnected.then(db => {
+    chats.forEach((chat, i) => {
+      db.collection('messages').find({ chatID: chat.chatID }).toArray((err, messages) => {
+        messagesArr.push(...messages);
+        if (i === chats.length - 1) {
+          res.status(200).send(messagesArr);
+        }
+      })
+    })
+  })
+})
+
 // GET GETMESSAGES/:CHATNAME
 router.get('/messages/:chatname', (req, res) => {
   let { chatname } = req.params;
