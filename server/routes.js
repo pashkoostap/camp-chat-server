@@ -16,7 +16,11 @@ cloudinary.config({
 
 // POST SIGNUP
 router.post('/signup', (req, res) => {
-  let { username, email, password } = req.body;
+  let { username, email, password, photo } = req.body;
+  let photoDefaultURL = 'http://res.cloudinary.com/dyldtu4gm/image/upload/v1494072138/anon_user_berl8k.jpg';
+  if (photo == '') {
+    photo = photoDefaultURL;
+  }
   mongoConnected.then(db => {
     db.collection('users').findOne({ $or: [{ username }, { email }] }).then((user) => {
       if (user) {
@@ -42,7 +46,7 @@ router.post('/signup', (req, res) => {
           message: 'Your password must contains at least 6 symbols'
         });
       } else {
-        db.collection('users').insert(req.body, (err, user) => {
+        db.collection('users').insert({ username, email, password, photo }, (err, user) => {
           if (err) {
             return res.status(404).send(err)
           }

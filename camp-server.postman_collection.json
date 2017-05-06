@@ -21,7 +21,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"username\": \"pashkoOstap1\",\n\t\"email\": \"pashkoOstap1@gmail.com\",\n\t\"password\": \"pashkoOstap1\"\n}"
+					"raw": "{\n\t\"username\": \"pashkoOstap2\",\n\t\"email\": \"pashkoOstap2@gmail.com\",\n\t\"password\": \"pashkoOstap2\",\n\t\"photo\":\n}"
 				},
 				"description": ""
 			},
@@ -41,7 +41,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": ""
+					"raw": "{\n\t\"username\": \"pashkoOstap\",\n\t\"password\": \"pashkoOstap\"\n}"
 				},
 				"description": ""
 			},
@@ -86,22 +86,55 @@
 				"header": [
 					{
 						"key": "Content-Type",
-						"value": "application/javascript",
+						"value": "application/json",
 						"description": ""
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"chat\": \"room\",\n\t\"users\": [\n\t\t{\"username\": \"pashkoOstap1\"},\n\t\t{\"username\": \"pashkoOstap2\"}\n\t]\n\t\t\n}"
+					"raw": "{\"chatname\":\"cool-chat-1\",\"users\":[{\"username\":\"pashkoOstap\"},{\"username\":\"pashkoOstap2\"}]}"
 				},
 				"description": ""
 			},
 			"response": []
 		},
 		{
-			"name": "POST /chat",
+			"name": "GET /messages/:chatname",
 			"request": {
-				"url": "{{url}}/chat",
+				"url": "{{url}}/messages/cool-chat",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "GET /chat/:userID",
+			"request": {
+				"url": "{{url}}/getchats/590b0dc434c7b01b70f39ff2",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "GET getmessage/:chatID",
+			"request": {
+				"url": "{{url}}/getmessages/590b782236b8cc15e49b79d4",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "POST /image",
+			"request": {
+				"url": "{{url}}/image",
 				"method": "POST",
 				"header": [
 					{
@@ -112,16 +145,16 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"chat\":\"room\",\"users\":[{\"username\":\"pashkoOstap1\"},{\"username\":\"pashkoOstap2\"}]}"
+					"raw": "{\"image\": \"https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSvGBbRtzgNfNaHPP9X28Gj6OQF0l6ZaiqgxJlujX5QsE5g35Or18WijxY3\"}"
 				},
 				"description": ""
 			},
 			"response": []
 		},
 		{
-			"name": "GET /messages/:chatname",
+			"name": "GET /getchat/:chatID",
 			"request": {
-				"url": "{{url}}/messages/cool-chat",
+				"url": "{{url}}/getchat/590d98137a6eae00114ad275",
 				"method": "GET",
 				"header": [],
 				"body": {},
