@@ -14,6 +14,7 @@ cloudinary.config({
   api_secret: 'peiRVSRPeidkQe4xsfM1Dhfsaz8'
 });
 
+// POST SIGNUP
 router.post('/signup', (req, res) => {
   let { username, email, password } = req.body;
   mongoConnected.then(db => {
@@ -61,6 +62,7 @@ router.post('/signup', (req, res) => {
   });
 })
 
+// POST LOGIN
 router.post('/login', (req, res) => {
   let { username, password } = req.body;
   mongoConnected.then(db => {
@@ -84,6 +86,7 @@ router.post('/login', (req, res) => {
   })
 });
 
+// DELETE USER
 router.delete('/user', (req, res) => {
   let { username, password } = req.body;
   mongoConnected.then(db => {
@@ -103,6 +106,7 @@ router.delete('/user', (req, res) => {
   })
 })
 
+// GET USERS
 router.get('/users', (req, res) => {
   mongoConnected.then(db => {
     db.collection('users').find({}, { password: 0 }).toArray((err, users) => {
@@ -111,6 +115,7 @@ router.get('/users', (req, res) => {
   })
 })
 
+// POST NEWCHAT
 router.post('/newchat', (req, res) => {
   let { chatname, users } = req.body;
   let chatObj = {
@@ -159,6 +164,7 @@ router.post('/newchat', (req, res) => {
   })
 })
 
+// GET GETCHATS/:USERID
 router.get('/getchats/:userID', (req, res) => {
   let { userID } = req.params;
   if (!ObjectID.isValid(userID)) {
@@ -180,7 +186,23 @@ router.get('/getchats/:userID', (req, res) => {
   })
 })
 
+// GET GETCHAT/:CHATID
+router.get('/getchat/:chatID', (req, res) => {
+  let { chatID } = req.params;
+  if (!ObjectID.isValid(chatID)) {
+    return res.status(404).json({
+      status: 400,
+      message: 'Please provide valid chatID'
+    })
+  }
+  mongoConnected.then(db => {
+    db.collection('chats').findOne({ _id: ObjectID(chatID) }).then(chat => {
+      res.status(200).send(chat)
+    })
+  })
+})
 
+// GET GETMESSAGES/:CHATID
 router.get('/getmessages/:chatID', (req, res) => {
   let { chatID } = req.params;
   if (!ObjectID.isValid(chatID)) {
@@ -202,6 +224,7 @@ router.get('/getmessages/:chatID', (req, res) => {
   })
 })
 
+// GET GETMESSAGES/:CHATNAME
 router.get('/messages/:chatname', (req, res) => {
   let { chatname } = req.params;
   mongoConnected.then(db => {
@@ -224,10 +247,10 @@ router.get('/messages/:chatname', (req, res) => {
         res.status(200).send(messages);
       })
     })
-
   })
 })
 
+// POST IMAGE/
 router.post('/image', (req, res) => {
   let { image } = req.body;
   console.log(image)
