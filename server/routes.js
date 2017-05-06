@@ -231,6 +231,7 @@ router.get('/getmessages/:chatID', (req, res) => {
 // POST MESSAGES/:CHATSARRAY
 router.post('/messages', (req, res) => {
   let { chats } = req.body;
+  console.log(chats);
   let messagesArr = [];
   if (!chats || !validateArray(chats)) {
     return res.status(400).json({
@@ -240,7 +241,7 @@ router.post('/messages', (req, res) => {
   }
   mongoConnected.then(db => {
     chats.forEach((chat, i) => {
-      db.collection('messages').find({ chatID: chat.chatID }).toArray((err, messages) => {
+      db.collection('messages').find({ chatID: chat._id }).toArray((err, messages) => {
         messagesArr.push(...messages);
         if (i === chats.length - 1) {
           res.status(200).send(messagesArr);
