@@ -231,7 +231,6 @@ router.get('/getmessages/:chatID', (req, res) => {
 // POST MESSAGES/:CHATSARRAY
 router.post('/messages', (req, res) => {
   let { chats } = req.body;
-  console.log(chats);
   let messagesArr = [];
   if (!chats || !validateArray(chats)) {
     return res.status(400).json({
@@ -240,17 +239,21 @@ router.post('/messages', (req, res) => {
     })
   }
   mongoConnected.then(db => {
-    let promisesArr = [];
     chats.forEach((chat, i) => {
       db.collection('messages').find({ chatID: chat._id }).toArray((err, messages) => {
-        let promise = Promise.resolve(messagesArr.push(...messages));
-        promisesArr.push(promise);
-        Promise.all(promisesArr).then(values => {
-          if (i === chats.length - 1) {
-            res.status(200).send(messagesArr);
-            console.log(messagesArr.length);
+        let checkIfMessages = (messages) => setTimeout(() => {
+          let messagesAmount = messages.length;
+          if (messagesAmount) {
+            messagesArr.push(...messages);
+          } else if (!messagesAmount) {
+            checkIfMessages(messages);
           }
-        })
+          if (i == chats.length - 1) {
+            res.status(200).send(messagesArr);
+            clearTimeout(checkIfMessages);
+          }
+        }, 50)
+        checkIfMessages(messages);
       })
     })
   })
