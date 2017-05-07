@@ -232,28 +232,23 @@ router.get('/getmessages/:chatID', (req, res) => {
 router.post('/messages', (req, res) => {
   let { chats } = req.body;
   let messagesArr = [];
-  let messagesCounter = 0;
-  const checkMessages = (messages, i) => setTimeout(() => {
-    if (messages != undefined) {
-      messagesCounter += messages.length;
-      messagesArr.push(...messages);
-      setTimeout(checkMessages, 50);
-    }
-    if (messagesCounter === messagesArr.length && i == chats.length - 1) {
-      res.send(messagesArr);
-    }
-    clearTimeout(checkMessages)
-  }, 50)
   if (!chats || !validateArray(chats)) {
     return res.status(400).json({
       status: 400,
-      message: 'Please provide an array of chats ids to get message'
+      message: 'Please provide an array of chats ids to get messages'
     })
   }
   mongoConnected.then(db => {
-    chats.forEach((chat, i) => {
-      db.collection('messages').find({ chatID: chat._id }).toArray((err, messages) => {
-        checkMessages(messages, i);
+    db.collection('messages').find({}).toArray((err, messages) => {
+      messages.forEach((message, i) => {
+        chats.forEach(chat => {
+          if (message.chatID === chat._id) {
+            messagesArr.push(message);
+          }
+        })
+        if (i == messages.length - 1) {
+          res.send(messagesArr);
+        }
       })
     })
   })
