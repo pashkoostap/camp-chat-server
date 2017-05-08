@@ -36,7 +36,6 @@ io.sockets
     socket.on('message', msg => {
       const msgObj = {
         msg: msg.text,
-        chatname: msg.chatname,
         chatID: msg.chatID,
         user: socket.decoded_token,
         time: Date.now()
@@ -53,6 +52,13 @@ io.sockets
     socket.on('join-room', (room) => {
       socket.join(room)
       socket.emit('join-room', {
+        user: socket.decoded_token,
+        time: Date.now()
+      });
+    })
+    socket.on('leave-room', (room) => {
+      socket.join(room)
+      socket.emit('leave-room', {
         user: socket.decoded_token,
         time: Date.now()
       });
