@@ -44,7 +44,7 @@ io.sockets
       mongoConnected.then(db => {
         db.collection('messages').insert(msgObj, (err, doc) => {
           let message = doc.ops[0];
-          io.to(message.chatname).emit('message', message);
+          io.to(message.chatID).emit('message', message);
         })
       })
     });
@@ -57,7 +57,7 @@ io.sockets
       });
     })
     socket.on('leave-room', (room) => {
-      socket.join(room)
+      socket.leave(room)
       socket.emit('leave-room', {
         user: socket.decoded_token,
         time: Date.now()
