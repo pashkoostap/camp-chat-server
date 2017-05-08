@@ -240,6 +240,14 @@ router.post('/messages', (req, res) => {
   }
   mongoConnected.then(db => {
     db.collection('messages').find({}).toArray((err, messages) => {
+      if (err) {
+        return res.status(400).send(err);
+      } else if (messages.length == 0) {
+        return res.status(400).json({
+          status: 400,
+          message: 'Messages were not found'
+        });
+      }
       messages.forEach((message, i) => {
         chats.forEach(chat => {
           if (message.chatID === chat._id) {
