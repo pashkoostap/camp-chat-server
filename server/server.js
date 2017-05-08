@@ -18,7 +18,7 @@ const server = http.createServer(app, ip);
 const io = socketIO(server);
 
 app.use(cors());
-app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.json({ limit: '50mb' }));
 app.use(router);
 
 app.use(express.static(publicPath));
@@ -29,7 +29,7 @@ io.sockets
     callback: false
   }))
   .on('authenticated', socket => {
-     io.emit('join', {
+    io.emit('join', {
       user: socket.decoded_token,
       time: Date.now()
     });
@@ -52,7 +52,10 @@ io.sockets
 
     socket.on('join-room', (room) => {
       socket.join(room)
-      console.log(room);
+      socket.emit('join-room', {
+        user: socket.decoded_token,
+        time: Date.now()
+      });
     })
   });
 
