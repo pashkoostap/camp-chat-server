@@ -193,7 +193,7 @@ router.post('/leavechat', (req, res) => {
   }
   mongoConnected.then(db => {
     db.collection('chats').findOneAndUpdate({ _id: ObjectID(chatID) }, { $pull: { users: { _id: ObjectID(userID) } } }).then((chat, err) => {
-      if (chat) {
+      if (!chat) {
         return res.status(400).json({
           status: 400,
           message: 'User not found in this chat'
