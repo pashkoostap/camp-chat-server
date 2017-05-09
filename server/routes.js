@@ -17,7 +17,7 @@ cloudinary.config({
 // POST SIGNUP
 router.post('/signup', (req, res) => {
   let { username, email, password, photo } = req.body;
-  let photoDefaultURL = 'http://res.cloudinary.com/dyldtu4gm/image/upload/v1494072138/anon_user_berl8k.jpg';
+  let photoDefaultURL = 'https://res.cloudinary.com/dyldtu4gm/image/upload/v1494072138/anon_user_berl8k.jpg';
   if (photo == '') {
     photo = photoDefaultURL;
   }
@@ -121,8 +121,13 @@ router.get('/users', (req, res) => {
 
 // POST NEWCHAT
 router.post('/newchat', (req, res) => {
-  let { chatname, users } = req.body;
+  let { photo, chatname, users } = req.body;
+  let photoDefaultURL = 'https://res.cloudinary.com/dyldtu4gm/image/upload/v1494337269/chat_default_radba1.jpg';
+  if (!photo) {
+    photo = photoDefaultURL;
+  }
   let chatObj = {
+    photo,
     chatname,
     users: []
   }
@@ -148,21 +153,24 @@ router.post('/newchat', (req, res) => {
           message: 'This chatname is already used'
         });
       }
-    })
-    users.forEach((user, i, arr) => {
-      let { username } = user;
-      db.collection('users').findOne({ username }, { password: 0 }).then(user => {
-        chatObj.users.push(user);
-        if (i == arr.length - 1) {
-          db.collection('chats').insert(chatObj).then(doc => {
-            let chat = doc.ops[0];
-            res.status(200).json({
-              status: 200,
-              message: 'New chat was successfully created',
-              chat
-            });
-          })
-        }
+      db.collection('users').find({}, { password: 0 }).toArray((err, usersArr) => {
+        users.forEach((user, i) => {
+          usersArr.forEach(userObj => {
+            if (userObj.username === user.username) {
+              chatObj.users.push(userObj);
+              if (i == users.length - 1) {
+                db.collection('chats').insert(chatObj).then(doc => {
+                  let chat = doc.ops[0];
+                  res.status(200).json({
+                    status: 200,
+                    message: 'New chat was successfully created',
+                    chat
+                  });
+                })
+              }
+            }
+          });
+        })
       })
     })
   })
@@ -295,7 +303,7 @@ router.post('/image', (req, res) => {
   if (!image || !validateString(image)) {
     return res.status(400).json({
       status: 400,
-      message: 'Please provide a valid image url or'
+      message: 'Please provide a valid image'
     })
   }
   cloudinary.uploader.upload(image, function (result) {
