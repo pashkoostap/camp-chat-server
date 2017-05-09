@@ -150,7 +150,7 @@ router.post('/newchat', (req, res) => {
       if (chat) {
         return res.status(400).json({
           status: 400,
-          message: 'This chatname is already used'
+          message: 'this chatname is already used'
         });
       }
       db.collection('users').find({}, { password: 0 }).toArray((err, usersArr) => {

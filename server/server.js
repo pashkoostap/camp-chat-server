@@ -49,16 +49,20 @@ io.sockets
       })
     });
 
-    socket.on('join-room', (room) => {
+    socket.on('new-chat', chat => {
+      io.emit('chat', chat);
+    })
+
+    socket.on('join-room', room => {
       socket.join(room)
-      socket.emit('join-room', {
+      io.emit('join-room', {
         user: socket.decoded_token,
         time: Date.now()
       });
     })
-    socket.on('leave-room', (room) => {
+    socket.on('leave-room', room => {
       socket.leave(room)
-      socket.emit('leave-room', {
+      io.emit('leave-room', {
         user: socket.decoded_token,
         time: Date.now()
       });
