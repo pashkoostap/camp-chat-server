@@ -176,6 +176,37 @@ router.post('/newchat', (req, res) => {
   })
 })
 
+// POST NEWCHAT
+router.post('/leavechat', (req, res) => {
+  let { chatID, userID } = req.body;
+  if (!ObjectID.isValid(chatID)) {
+    return res.status(400).json({
+      status: 400,
+      message: 'Please provide valid chatID'
+    });
+  }
+  if (!ObjectID.isValid(userID)) {
+    return res.status(400).json({
+      status: 400,
+      message: 'Please provide valid userID'
+    });
+  }
+  mongoConnected.then(db => {
+    db.collection('chats').findOneAndUpdate({ _id: ObjectID(chatID) }, { $pull: { users: { _id: ObjectID(userID) } } }).then((chat, err) => {
+      if (chat) {
+        return res.status(400).json({
+          status: 400,
+          message: 'User not found in this chat'
+        })
+      }
+      res.status(200).json({
+        status:200,
+        message: 'You have left this chat'
+      })
+    })
+  })
+})
+
 // GET GETCHATS/:USERID
 router.get('/getchats/:userID', (req, res) => {
   let { userID } = req.params;
