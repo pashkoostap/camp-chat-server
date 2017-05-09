@@ -50,19 +50,19 @@ io.sockets
     });
 
     socket.on('new-chat', chat => {
-      io.emit('chat', chat);
+      io.emit('new-chat', chat);
     })
 
     socket.on('join-room', room => {
       socket.join(room)
-      io.emit('join-room', {
+      socket.emit('join-room', {
         user: socket.decoded_token,
         time: Date.now()
       });
     })
     socket.on('leave-room', room => {
       socket.leave(room)
-      io.emit('leave-room', {
+      socket.emit('leave-room', {
         user: socket.decoded_token,
         time: Date.now()
       });
