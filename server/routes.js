@@ -328,18 +328,18 @@ router.get('/messages/:chatname', (req, res) => {
 })
 
 // POST IMAGE/
-router.post('/image', (req, res) => {
-  let { image } = req.body;
-  console.log(image)
-  if (!image || !validateString(image)) {
-    return res.status(400).json({
-      status: 400,
-      message: 'Please provide a valid image'
-    })
-  }
-  cloudinary.uploader.upload(image, function (result) {
-    res.send(result)
-  });
-})
+// router.post('/image', (req, res) => {
+//   let { image } = req.body;
+//   console.log(image)
+//   if (!image || !validateString(image)) {
+//     return res.status(400).json({
+//       status: 400,
+//       message: 'Please provide a valid image'
+//     })
+//   }
+//   cloudinary.uploader.upload(image, function (result) {
+//     res.send(result)
+//   });
+// })
 
 module.exports = router
