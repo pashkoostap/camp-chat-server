@@ -81,7 +81,7 @@
 		{
 			"name": "POST /chat",
 			"request": {
-				"url": "{{url}}/chat",
+				"url": "{{url}}/newchat",
 				"method": "POST",
 				"header": [
 					{
@@ -92,7 +92,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"chatname\":\"cool-chat-1\",\"users\":[{\"username\":\"pashkoOstap\"},{\"username\":\"pashkoOstap2\"}]}"
+					"raw": "{\"chatname\":\"cool-chat-4\",\"users\":[{\"username\":\"pashkoOstap\"}]}"
 				},
 				"description": ""
 			},
@@ -158,6 +158,46 @@
 				"method": "GET",
 				"header": [],
 				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "POST /messages/:chats",
+			"request": {
+				"url": "{{url}}/messages",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"chats\": [{\"_id\":\"590d98137a6eae00114ad275\",\"chatname\":\"Common chat\",\"users\":[{\"_id\":\"590d97f77a6eae00114ad274\",\"username\":\"turist1990\",\"email\":\"turist@gmail.com\",\"photo\":\"http://res.cloudinary.com/dyldtu4gm/image/upload/v1494063081/ocrvsiouqrmntaalmapp.jpg\"},{\"_id\":\"590cf5f91e2bf50011cffd02\",\"username\":\"pashkoOstap\",\"email\":\"pashkoOstap@gmail.com\",\"photo\":\"http://res.cloudinary.com/dyldtu4gm/image/upload/v1494021623/hby8olwjjsvhogtaqg42.jpg\"},{\"_id\":\"590d9b3bfac61600119808e3\",\"username\":\"santehnik\",\"email\":\"santehnik@gmail.com\",\"photo\":\"http://res.cloudinary.com/dyldtu4gm/image/upload/v1494063929/gzcjhnvn571rmg8uhcjk.png\"},{\"_id\":\"590dbdcb410f080011e66a80\",\"username\":\"baratrum\",\"email\":\"baratrum@gmail.com\",\"photo\":\"http://res.cloudinary.com/dyldtu4gm/image/upload/v1494072138/anon_user_berl8k.jpg\"}]},{\"_id\":\"590dbe20410f080011e66a81\",\"chatname\":\"Test chat\",\"users\":[{\"_id\":\"590d97f77a6eae00114ad274\",\"username\":\"turist1990\",\"email\":\"turist@gmail.com\",\"photo\":\"http://res.cloudinary.com/dyldtu4gm/image/upload/v1494063081/ocrvsiouqrmntaalmapp.jpg\"},{\"_id\":\"590d9b3bfac61600119808e3\",\"username\":\"santehnik\",\"email\":\"santehnik@gmail.com\",\"photo\":\"http://res.cloudinary.com/dyldtu4gm/image/upload/v1494063929/gzcjhnvn571rmg8uhcjk.png\"},{\"_id\":\"590cf5f91e2bf50011cffd02\",\"username\":\"pashkoOstap\",\"email\":\"pashkoOstap@gmail.com\",\"photo\":\"http://res.cloudinary.com/dyldtu4gm/image/upload/v1494021623/hby8olwjjsvhogtaqg42.jpg\"}]}]}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "POST /leavechat",
+			"request": {
+				"url": "{{url}}/leavechat",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"chatID\": \"591229fda10ddc0011941136\", \"userID\": \"59121a8ad89ff5001135b355\"}"
+				},
 				"description": ""
 			},
 			"response": []

@@ -31,17 +31,17 @@ router.post('/signup', (req, res) => {
       }
 
       if (!username || !validateString(username)) {
-        res.status(400).json({
+        return res.status(400).json({
           status: 400,
           message: 'Your name must contains at least 6 symbols'
         });
       } else if (!email || !validateEmail(email)) {
-        res.status(400).json({
+        return res.status(400).json({
           status: 400,
           message: 'Please provide a valid email'
         });
       } else if (!password || !validateString(password)) {
-        res.status(400).json({
+        return res.status(400).json({
           status: 400,
           message: 'Your password must contains at least 6 symbols'
         });
@@ -52,7 +52,7 @@ router.post('/signup', (req, res) => {
           }
           let { _id, username, email, photo } = user.ops[0];
           // UPDATING COMMON CHAT WITH NEW REGISTERED USER
-          let commonChatID = '590d98137a6eae00114ad275';
+          let commonChatID = '5914713599ba3b2814a07812';
           db.collection('chats').findOneAndUpdate({ _id: ObjectID(commonChatID) }, { $push: { users: { _id, username, email, photo } } }).then(chat => console.log('Users in common chat were updated'))
 
           res.status(200).json({
