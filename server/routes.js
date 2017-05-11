@@ -15,56 +15,56 @@ cloudinary.config({
 });
 
 // POST SIGNUP
-router.post('/signup', (req, res) => {
-  let { username, email, password, photo } = req.body;
-  let photoDefaultURL = 'https://res.cloudinary.com/dyldtu4gm/image/upload/v1494072138/anon_user_berl8k.jpg';
-  if (photo == '') {
-    photo = photoDefaultURL;
-  }
-  mongoConnected.then(db => {
-    db.collection('users').findOne({ $or: [{ username }, { email }] }).then((user) => {
-      if (user) {
-        return res.status(400).json({
-          status: 400,
-          message: 'This username or email is already used'
-        });
-      }
+// router.post('/signup', (req, res) => {
+//   let { username, email, password, photo } = req.body;
+//   let photoDefaultURL = 'https://res.cloudinary.com/dyldtu4gm/image/upload/v1494072138/anon_user_berl8k.jpg';
+//   if (photo == '') {
+//     photo = photoDefaultURL;
+//   }
+//   mongoConnected.then(db => {
+//     db.collection('users').findOne({ $or: [{ username }, { email }] }).then((user) => {
+//       if (user) {
+//         return res.status(400).json({
+//           status: 400,
+//           message: 'This username or email is already used'
+//         });
+//       }
 
-      if (!username || !validateString(username)) {
-        return res.status(400).json({
-          status: 400,
-          message: 'Your name must contains at least 6 symbols'
-        });
-      } else if (!email || !validateEmail(email)) {
-        return res.status(400).json({
-          status: 400,
-          message: 'Please provide a valid email'
-        });
-      } else if (!password || !validateString(password)) {
-        return res.status(400).json({
-          status: 400,
-          message: 'Your password must contains at least 6 symbols'
-        });
-      } else {
-        db.collection('users').insert({ username, email, password, photo }, (err, user) => {
-          if (err) {
-            return res.status(404).send(err)
-          }
-          let { _id, username, email, photo } = user.ops[0];
-          // UPDATING COMMON CHAT WITH NEW REGISTERED USER
-          let commonChatID = '5914713599ba3b2814a07812';
-          db.collection('chats').findOneAndUpdate({ _id: ObjectID(commonChatID) }, { $push: { users: { _id, username, email, photo } } }).then(chat => console.log('Users in common chat were updated'))
+//       if (!username || !validateString(username)) {
+//         return res.status(400).json({
+//           status: 400,
+//           message: 'Your name must contains at least 6 symbols'
+//         });
+//       } else if (!email || !validateEmail(email)) {
+//         return res.status(400).json({
+//           status: 400,
+//           message: 'Please provide a valid email'
+//         });
+//       } else if (!password || !validateString(password)) {
+//         return res.status(400).json({
+//           status: 400,
+//           message: 'Your password must contains at least 6 symbols'
+//         });
+//       } else {
+//         db.collection('users').insert({ username, email, password, photo }, (err, user) => {
+//           if (err) {
+//             return res.status(404).send(err)
+//           }
+//           let { _id, username, email, photo } = user.ops[0];
+//           // UPDATING COMMON CHAT WITH NEW REGISTERED USER
+//           let commonChatID = '5914713599ba3b2814a07812';
+//           db.collection('chats').findOneAndUpdate({ _id: ObjectID(commonChatID) }, { $push: { users: { _id, username, email, photo } } }).then(chat => console.log('Users in common chat were updated'))
 
-          res.status(200).json({
-            status: 200,
-            message: 'Your account was successfully created',
-            user: { _id, username, email, photo }
-          });
-        })
-      }
-    })
-  });
-})
+//           res.status(200).json({
+//             status: 200,
+//             message: 'Your account was successfully created',
+//             user: { _id, username, email, photo }
+//           });
+//         })
+//       }
+//     })
+//   });
+// })
 
 // POST LOGIN
 router.post('/login', (req, res) => {
