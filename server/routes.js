@@ -90,6 +90,37 @@ router.post('/login', (req, res) => {
   })
 });
 
+// POST LOGIN-PROVIDERS
+router.post('/login-providers', (req, res) => {
+  let { username, email, provider, uid, photo } = req.body;
+  let photoDefaultURL = 'https://res.cloudinary.com/dyldtu4gm/image/upload/v1494072138/anon_user_berl8k.jpg';
+  if (!photo) {
+    photo = photoDefaultURL;
+  }
+  const token = jwt.sign({ username, email, provider, uid, photo }, CONFIG.SECRET, { noTimestamp: true })
+  mongoConnected.then(db => {
+    db.collection('users').findOne({ username, email, provider, uid, photo }, { uid: 0 }).then(user => {
+      if (!user) {
+        db.collection('users').insert({ username, email, provider, uid, photo }).then((err, user) => {
+          res.status(200).json({
+            user,
+            token,
+            message: 'User was created',
+            status: 200
+          })
+        })
+      } else {
+        res.status(200).json({
+          status: 200,
+          token: token,
+          user: user,
+          message: 'User logged'
+        })
+      }
+    })
+  })
+})
+
 // DELETE USER
 router.delete('/user', (req, res) => {
   let { username, password } = req.body;
@@ -200,7 +231,7 @@ router.post('/leavechat', (req, res) => {
         })
       }
       res.status(200).json({
-        status:200,
+        status: 200,
         message: 'You have left this chat'
       })
     })
