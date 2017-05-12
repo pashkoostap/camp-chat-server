@@ -94,23 +94,32 @@ router.post('/login', (req, res) => {
 router.post('/login-providers', (req, res) => {
   let { username, email, provider, uid, photo } = req.body;
   let photoDefaultURL = 'https://res.cloudinary.com/dyldtu4gm/image/upload/v1494072138/anon_user_berl8k.jpg';
-  if (!photo) {
+  if (photo == 'undefined') {
     photo = photoDefaultURL;
   }
   const token = jwt.sign({ username, email, provider, uid, photo }, CONFIG.SECRET, { noTimestamp: true })
   mongoConnected.then(db => {
     db.collection('users').findOne({ username, email, provider, uid, photo }, { uid: 0 }).then(user => {
       if (!user) {
-        db.collection('users').insert({ username, email, provider, uid, photo }).then((err, user) => {
-          res.status(200).json({
-            user,
-            token,
+        db.collection('users').insert({ username, email, provider, uid, photo }).then((doc, err) => {
+          if (err) {
+            return res.status(404).send(err)
+          }
+          let commonChatID = '5914713599ba3b2814a07812';
+          let userObj = doc.ops[0];
+          let { _id, username, email, photo, provider } = doc.ops[0];
+          db.collection('chats').findOneAndUpdate({ _id: ObjectID(commonChatID) }, { $push: { users: { _id, username, email, photo, provider } } }).then(chat => {
+            console.log('Users in common chat were updated');
+          })
+          return res.status(200).json({
+            user: userObj,
+            token: token,
             message: 'User was created',
             status: 200
           })
         })
       } else {
-        res.status(200).json({
+        return res.status(200).json({
           status: 200,
           token: token,
           user: user,
