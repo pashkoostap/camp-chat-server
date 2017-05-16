@@ -159,6 +159,15 @@ router.get('/users', (req, res) => {
   })
 })
 
+// GET CONNECTED USERS
+router.get('/connected-users', (req, res) => {
+  mongoConnected.then(db => {
+    db.collection('connectedUsers').find({}).toArray((err, users) => {
+      res.status(200).send(users);
+    })
+  })
+})
+
 // POST NEWCHAT
 router.post('/newchat', (req, res) => {
   let { photo, chatname, users } = req.body;
