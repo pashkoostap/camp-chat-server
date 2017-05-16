@@ -30,13 +30,33 @@ io.sockets
     callback: false
   }))
   .on('authenticated', socket => {
-    connectedUsers.push(socket.decoded_token);
-    io.emit('join', {
-      user: socket.decoded_token,
-      connectedUsers,
-      time: Date.now()
-    });
-    
+    mongoConnected.then(db => {
+      db.collection('connectedUsers').insert(socket.decoded_token, (err, doc) => {
+        console.log(':::connected')
+        db.collection('connectedUsers').find({}).toArray((err, connectedUsers) => {
+          io.emit('join', {
+            user: socket.decoded_token,
+            connectedUsers,
+            time: Date.now()
+          });
+        })
+      })
+    })
+
+    socket.on('disconnect', () => {
+      mongoConnected.then(db => {
+        db.collection('connectedUsers').findOneAndDelete(socket.decoded_token, (err, doc) => {
+          console.log(':::dissconnected')
+          db.collection('connectedUsers').find({}).toArray((err, connectedUsers) => {
+            io.emit('leave', {
+              user: socket.decoded_token,
+              connectedUsers,
+              time: Date.now()
+            });
+          })
+        })
+      })
+    })
 
     socket.on('message', msg => {
       const msgObj = {
@@ -71,14 +91,6 @@ io.sockets
         user: socket.decoded_token,
         time: Date.now()
       });
-    })
-    socket.on('disconnect', () => {
-      connectedUsers.splice(connectedUsers.indexOf(socket.decoded_token), 1);
-      io.emit('leave', {
-        user: socket.decoded_token,
-        connectedUsers,
-        time: Date.now()
-      })
     })
   });
 

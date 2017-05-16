@@ -16,6 +16,7 @@
     <input class="username" type="text" name="username" placeholder="username" value="pashkoOstap">
     <input class="password" type="text" name="password" placeholder="password" value="pashkoOstap">
     <button class="login" type="submit">Login</button>
+    <button class="logout" type="submit">Logout</button>
   </form>
 
   <form class="send-message">
@@ -29,6 +30,7 @@
     const socket = io.connect('http://192.168.1.13:5000');
     const loginForm = document.querySelector('.login-form');
     const loginButton = loginForm.querySelector('.login');
+    const logoutButton = loginForm.querySelector('.logout');
     const username = loginForm.querySelector('.username');
     const password = loginForm.querySelector('.password');
     const sendMessageForm = document.querySelector('.send-message');
@@ -55,19 +57,29 @@
         })
     })
 
-    sendMessageButton.addEventListener('click', (e) => {
+    logoutButton.addEventListener('click', (e) => {
       e.preventDefault();
-      socket.emit('message', { 
-        chatname: sendMessageChat.value, 
-        chatID: sendMessageChat.value,
-        text: sendMessageInput.value });
-      socket.emit('join-room', sendMessageChat.value);
+      socket.disconnect();
     })
 
+    sendMessageButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      socket.emit('message', {
+        chatname: sendMessageChat.value,
+        chatID: sendMessageChat.value,
+        text: sendMessageInput.value
+      });
+      socket.emit('join-room', sendMessageChat.value);
+    })
+    
+    
     socket.on('connect', () => {
       console.info('connected');
     })
     socket.on('join', msg => {
+      console.log(msg);
+    })
+    socket.on('leave', msg => {
       console.log(msg);
     })
     socket.on('message', msg => {
