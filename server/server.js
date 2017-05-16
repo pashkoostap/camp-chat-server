@@ -16,6 +16,7 @@ const ip = process.env.IP || '192.168.1.13';
 const port = process.env.PORT || 5000;
 const server = http.createServer(app, ip);
 const io = socketIO(server);
+let connectedUsers = [];
 
 app.use(cors());
 app.use(bodyParser.json({ limit: '50mb' }));
@@ -29,10 +30,14 @@ io.sockets
     callback: false
   }))
   .on('authenticated', socket => {
+    
     io.emit('join', {
       user: socket.decoded_token,
+      connectedUsers,
       time: Date.now()
     });
+    connectedUsers.push(socket.decoded_token);
+
     socket.on('message', msg => {
       const msgObj = {
         msg: msg.text,
@@ -66,6 +71,14 @@ io.sockets
         user: socket.decoded_token,
         time: Date.now()
       });
+    })
+    socket.on('disconnect', () => {
+      connectedUsers.splice(connectedUsers.indexOf(socket.decoded_token), 1);
+      io.emit('leave', {
+        user: socket.decoded_token,
+        connectedUsers,
+        time: Date.now()
+      })
     })
   });
 
