@@ -30,13 +30,13 @@ io.sockets
     callback: false
   }))
   .on('authenticated', socket => {
-    
+    connectedUsers.push(socket.decoded_token);
     io.emit('join', {
       user: socket.decoded_token,
       connectedUsers,
       time: Date.now()
     });
-    connectedUsers.push(socket.decoded_token);
+    
 
     socket.on('message', msg => {
       const msgObj = {
