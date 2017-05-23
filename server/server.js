@@ -32,7 +32,6 @@ io.sockets
   .on('authenticated', socket => {
     mongoConnected.then(db => {
       db.collection('connectedUsers').insert(socket.decoded_token, (err, doc) => {
-        console.log(':::connected')
         db.collection('connectedUsers').find({}).toArray((err, connectedUsers) => {
           io.emit('join', {
             user: socket.decoded_token,
@@ -46,7 +45,6 @@ io.sockets
     socket.on('disconnect', () => {
       mongoConnected.then(db => {
         db.collection('connectedUsers').findOneAndDelete(socket.decoded_token, (err, doc) => {
-          console.log(':::dissconnected')
           db.collection('connectedUsers').find({}).toArray((err, connectedUsers) => {
             io.emit('leave', {
               user: socket.decoded_token,
